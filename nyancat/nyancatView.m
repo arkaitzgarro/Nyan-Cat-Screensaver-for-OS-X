@@ -126,28 +126,13 @@
     destRect.size = imageSize;
     
     // Use NyanCat position to figure out where to draw rainbow
-    int lastNyanRainbowEndX = destRect.origin.x + 6;
-    int shiftY = 5;
     BOOL shift = NO;
     if(shiftRainbow == 2 || shiftRainbow == 3) {
         shift = YES;
         
     }
     
-    int nyanRainbowX = lastNyanRainbowEndX;
-    int nyanRainBowY = destRect.origin.y + 22;
     shift = !shift;
-    
-    // draw rainbow
-    while(nyanRainbowX + 46 > 0 ) {
-        if(shift) {
-           [self drawNyanRainbowSection:NSMakePoint(nyanRainbowX, nyanRainBowY + shiftY)]; 
-        } else {
-           [self drawNyanRainbowSection:NSMakePoint(nyanRainbowX, nyanRainBowY)];
-        }
-        shift = !shift;
-        nyanRainbowX -= 46;
-    }
     
     // draw kitty
     [currentFrame drawInRect: destRect
@@ -172,29 +157,6 @@
     NSRectFill([self bounds]);
 }
 
-
-- (void) drawNyanRainbowSection: (NSPoint)origin {
-    int rainbowSectionLength = 46;
-    int rainbowSectionHeight = 17;
-    
-    [[NSColor colorWithDeviceRed: 102.0f/255.0f green: 51.0f/255.0f blue:1.0f alpha: 1.0f] set];
-    NSRectFill(NSMakeRect(origin.x,origin.y + 0*rainbowSectionHeight,rainbowSectionLength,rainbowSectionHeight));
-    
-    [[NSColor colorWithDeviceRed: 0.0f green: 153.0f/255.0f blue:1.0f alpha: 1.0f] set];
-    NSRectFill(NSMakeRect(origin.x,origin.y + 1*rainbowSectionHeight,rainbowSectionLength,rainbowSectionHeight));
-    
-    [[NSColor colorWithDeviceRed: 51.0f/255.0f green: 1.0f blue:0.0f alpha: 1.0f] set];
-    NSRectFill(NSMakeRect(origin.x,origin.y + 2*rainbowSectionHeight,rainbowSectionLength,rainbowSectionHeight));
-
-    [[NSColor colorWithDeviceRed: 1.0f green: 1.0f blue:0.0f alpha: 1.0f] set];
-    NSRectFill(NSMakeRect(origin.x,origin.y + 3*rainbowSectionHeight,rainbowSectionLength,rainbowSectionHeight));
-    
-    [[NSColor colorWithDeviceRed: 1.0f green: 153.0f/255.0f blue:0.0f alpha: 1.0f] set];
-    NSRectFill(NSMakeRect(origin.x,origin.y + 4*rainbowSectionHeight,rainbowSectionLength,rainbowSectionHeight));
-    
-    [[NSColor colorWithDeviceRed: 1.0f green: 0.0f blue:0.0f alpha: 1.0f] set];
-    NSRectFill(NSMakeRect(origin.x,origin.y + 5*rainbowSectionHeight,rainbowSectionLength,rainbowSectionHeight));
-}
 - (void)drawNyanStar:(NyanStarData*)nyanStar {
     NSColor *white = [NSColor whiteColor];
     NSPoint center = [nyanStar getCenter];
