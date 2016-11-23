@@ -17,16 +17,16 @@
         [self setAnimationTimeInterval:0.07F];
         
         /**
-        *
-        * Init image
-        *
-        **/
+         *
+         * Init image
+         *
+         **/
         
         NSBundle* bundle = [NSBundle bundleForClass:[self class]];
         NSString* envsPListPath = [bundle pathForResource:@"cat" ofType:@"gif"];
         displayImage = [[[NSImage alloc] initWithContentsOfFile:envsPListPath] autorelease];
         
-        // Thanks to http://blog.pcitron.fr/2010/12/14/play-an-animated-gif-with-an-ikimageview/ 
+        // Thanks to http://blog.pcitron.fr/2010/12/14/play-an-animated-gif-with-an-ikimageview/
         // for example code on how to do this
         NSArray * reps = [displayImage representations];
         for (NSImageRep * rep in reps)
@@ -54,25 +54,6 @@
             }
         }
         
-        /**
-         *
-         * Init star data
-         *
-         **/
-        int numNyanStars = 15;
-        if(isPreview) {
-            numNyanStars = 3;
-        }
-        
-        nyanStars = [[NSMutableArray alloc] init];
-        for(int x = 0; x < numNyanStars; x++) {
-            NyanStarData* nyanStar = [[NyanStarData alloc] init];
-            NSSize dotSize = NSMakeSize(6,6);
-            // Calculate random origin point
-            NSPoint nyanStarCenter = SSRandomPointForSizeWithinRect( dotSize, [self bounds] );
-            [nyanStar setCenter:nyanStarCenter setFrameNumber:x];
-            [nyanStars addObject:nyanStar];
-        }
         gifFrameNumber = 0;
         shiftRainbow = 0;
     }
@@ -95,21 +76,13 @@
     
     // Draw background
     [self drawBackground];
-
-    // Draw stars
-    NSEnumerator* enumerator = [nyanStars objectEnumerator];
-    NyanStarData* element;
-    while((element = [enumerator nextObject]))
-    {
-            [self drawNyanStar:element];
-    }
     
     
-    //Figure out where to draw nyancat 
+    //Figure out where to draw nyancat
     CGImageRef imageRef = (CGImageRef) gifFrames[gifFrameNumber];
-
+    
     NSImage* currentFrame = [[NSImage alloc] initWithCGImage:imageRef size:NSZeroSize];
-
+    
     NSSize viewSize  = [self bounds].size;
     NSSize imageSize = NSMakeSize(200, 140);
     
@@ -126,19 +99,34 @@
     destRect.size = imageSize;
     
     // Use NyanCat position to figure out where to draw rainbow
+    int lastNyanRainbowEndX = destRect.origin.x + 6;
+    int shiftY = 5;
     BOOL shift = NO;
     if(shiftRainbow == 2 || shiftRainbow == 3) {
         shift = YES;
         
     }
     
+    int nyanRainbowX = lastNyanRainbowEndX;
+    int nyanRainBowY = destRect.origin.y + 2;
     shift = !shift;
+    
+    // draw rainbow
+    while(nyanRainbowX + 46 > 0 ) {
+        if(shift) {
+            [self drawNyanRainbowSection:NSMakePoint(nyanRainbowX, nyanRainBowY + shiftY)];
+        } else {
+            [self drawNyanRainbowSection:NSMakePoint(nyanRainbowX, nyanRainBowY)];
+        }
+        shift = !shift;
+        nyanRainbowX -= 46;
+    }
     
     // draw kitty
     [currentFrame drawInRect: destRect
-             fromRect: NSZeroRect
-            operation: NSCompositeSourceOver
-             fraction: 1.0];
+                    fromRect: NSZeroRect
+                   operation: NSCompositeSourceOver
+                    fraction: 1.0];
     
     [currentFrame release];
 }
@@ -146,9 +134,9 @@
 - (void)drawBackground {
     
     // Background color
-    float red = 0.0f;
-    float green = 51.0/255.0f;
-    float blue = 102.0/255.0f;
+    float red = 251.0/255.0f;
+    float green = 219.0/255.0f;
+    float blue = 139.0/255.0f;
     float alpha = 1.0f;
     
     NSColor *color= [NSColor colorWithDeviceRed: red green: green blue: blue alpha: alpha];
@@ -157,61 +145,23 @@
     NSRectFill([self bounds]);
 }
 
-- (void)drawNyanStar:(NyanStarData*)nyanStar {
-    NSColor *white = [NSColor whiteColor];
-    NSPoint center = [nyanStar getCenter];
-    [white set];
-    if([nyanStar getFrameNumber] == 0) {
-        NSRectFill(NSMakeRect(center.x,center.y,6,6));    
-    } else if([nyanStar getFrameNumber] == 1) {
-        NSRectFill(NSMakeRect(center.x + 6,center.y,6,5));
-        NSRectFill(NSMakeRect(center.x - 6,center.y,6,5));
-        NSRectFill(NSMakeRect(center.x,center.y + 6,5,6));
-        NSRectFill(NSMakeRect(center.x,center.y - 6,5,6));
-    } else if([nyanStar getFrameNumber] == 2) {
-        NSRectFill(NSMakeRect(center.x + 6,center.y,12,6));
-        NSRectFill(NSMakeRect(center.x - 11,center.y,11,6));
-        NSRectFill(NSMakeRect(center.x,center.y + 6,6,11));
-        NSRectFill(NSMakeRect(center.x,center.y - 12,6,12));
-    } else if([nyanStar getFrameNumber] == 3) {
-        NSRectFill(NSMakeRect(center.x,center.y,6,6));
-        
-        NSRectFill(NSMakeRect(center.x + 12,center.y,11,6));
-        NSRectFill(NSMakeRect(center.x - 17,center.y,11,6));
-        NSRectFill(NSMakeRect(center.x,center.y + 12,6,11));
-        NSRectFill(NSMakeRect(center.x,center.y - 17,6,11));
-    } else if([nyanStar getFrameNumber] == 4) {
-        NSRectFill(NSMakeRect(center.x + 17,center.y,6,6));
-        NSRectFill(NSMakeRect(center.x - 17,center.y,6,6));
-        NSRectFill(NSMakeRect(center.x,center.y + 17,6,6));
-        NSRectFill(NSMakeRect(center.x,center.y - 17,6,6));
+
+- (void) drawNyanRainbowSection: (NSPoint)origin {
+    int rainbowSectionLength = 46;
+    int rainbowSectionHeight = 30;
     
-        NSRectFill(NSMakeRect(center.x + 12,center.y + 12,5,5));
-        NSRectFill(NSMakeRect(center.x - 11,center.y + 12,5,5));
-        NSRectFill(NSMakeRect(center.x + 12,center.y - 12,5,5));
-        NSRectFill(NSMakeRect(center.x - 11,center.y - 12,5,5));
-    } else if([nyanStar getFrameNumber] == 5) {
-        NSRectFill(NSMakeRect(center.x + 17,center.y,6,6));
-        NSRectFill(NSMakeRect(center.x - 17,center.y,6,6));
-        NSRectFill(NSMakeRect(center.x,center.y + 17,6,6));
-        NSRectFill(NSMakeRect(center.x,center.y - 17,6,6));
-   }
+    [[NSColor colorWithDeviceRed: 249.0/255.0f green: 1.0/255.0f blue: 2.0/255.0f alpha: 1.0f] set];
+    NSRectFill(NSMakeRect(origin.x,origin.y + 0*rainbowSectionHeight,rainbowSectionLength,rainbowSectionHeight));
+    
+    [[NSColor colorWithDeviceRed: 1.0f green: 1.0f blue: 1.0f alpha: 1.0f] set];
+    NSRectFill(NSMakeRect(origin.x,origin.y + 1*rainbowSectionHeight,rainbowSectionLength,rainbowSectionHeight));
+    
+    [[NSColor colorWithDeviceRed: 6.0/255.0f green: 167.0/255.0f blue: 6.0/255.0f alpha: 1.0f] set];
+    NSRectFill(NSMakeRect(origin.x,origin.y + 2*rainbowSectionHeight,rainbowSectionLength,rainbowSectionHeight));
 }
 
 - (void)animateOneFrame
 {
-    NSEnumerator* enumerator = [nyanStars objectEnumerator];
-    NyanStarData* element;
-    while((element = [enumerator nextObject]))
-    {
-        int newFrameNumber = ([element getFrameNumber] + 1) % 6;
-        NSPoint newCenter = [element getCenter];
-        newCenter.x = newCenter.x - 46;
-        if(newCenter.x < 0) {
-            newCenter.x += [self bounds].size.width;
-        }
-        [element setCenter:newCenter setFrameNumber:newFrameNumber];
-    }
     shiftRainbow = (shiftRainbow + 1) % 4;
     gifFrameNumber = (gifFrameNumber + 1) % (int) [gifFrames count];
     [self setNeedsDisplay:YES];

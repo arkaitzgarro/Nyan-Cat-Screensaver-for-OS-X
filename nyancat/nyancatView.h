@@ -10,15 +10,13 @@
 #import "NyanStarData.h"
 
 @interface nyancatView : ScreenSaverView {
-     NSImage *displayImage;
-     NSMutableArray *nyanStars; 
-     int shiftRainbow;
-     int gifFrameNumber;
-     NSMutableArray * gifFrames;
+    NSImage *displayImage;
+    int shiftRainbow;
+    int gifFrameNumber;
+    NSMutableArray * gifFrames;
 }
 
-- (void)drawNyanStar:(NyanStarData*)nyanStar;
-- (void) drawNyanRainbowSection: (NSPoint)origin;
+- (void)drawNyanRainbowSection: (NSPoint)origin;
 - (void)drawBackground;
 
 @end
