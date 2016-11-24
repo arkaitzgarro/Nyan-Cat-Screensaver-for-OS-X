@@ -77,6 +77,9 @@
     // Draw background
     [self drawBackground];
     
+    // Draw ground
+    [self drawGround];
+    
     
     //Figure out where to draw nyancat
     CGImageRef imageRef = (CGImageRef) gifFrames[gifFrameNumber];
@@ -143,6 +146,27 @@
     
     [color set];
     NSRectFill([self bounds]);
+}
+
+- (void)drawGround {
+    
+    NSSize viewSize  = [self bounds].size;
+    
+    NSColor *lineColor= [NSColor colorWithDeviceRed: 0.0f green: 0.0f blue: 0.0f alpha: 1.0f];
+    
+    [lineColor set];
+    NSRectFill(NSMakeRect(0.0f, viewSize.height/5.0f, viewSize.width, 10.0f));
+    
+    // Ground color
+    float red = 187.0/255.0f;
+    float green = 164.0/255.0f;
+    float blue = 3.0/255.0f;
+    float alpha = 1.0f;
+    
+    NSColor *groundColor= [NSColor colorWithDeviceRed: red green: green blue: blue alpha: alpha];
+    
+    [groundColor set];
+    NSRectFill(NSMakeRect(0.0f, 0.0f, viewSize.width, viewSize.height/5.0f));
 }
 
 

@@ -18,5 +18,6 @@
 
 - (void)drawNyanRainbowSection: (NSPoint)origin;
 - (void)drawBackground;
+- (void)drawGround;
 
 @end
