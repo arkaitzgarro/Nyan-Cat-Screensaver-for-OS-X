@@ -1,14 +1,13 @@
 //
-//  nyancatView.m
-//  nyancat
+//  tacocat.m
+//  tacocat
 //
 //  Created by Vinay Tota on 7/5/11.
 //
 
-#import "nyancatView.h"
-#import "NyanStarData.h"
+#import "tacocatView.h"
 
-@implementation nyancatView
+@implementation tacocatView
 
 - (id)initWithFrame:(NSRect)frame isPreview:(BOOL)isPreview
 {
@@ -21,14 +20,13 @@
          * Init image
          *
          **/
-        
         NSBundle* bundle = [NSBundle bundleForClass:[self class]];
         NSString* envsPListPath = [bundle pathForResource:@"cat" ofType:@"gif"];
-        displayImage = [[[NSImage alloc] initWithContentsOfFile:envsPListPath] autorelease];
+        tacocatImage = [[[NSImage alloc] initWithContentsOfFile:envsPListPath] autorelease];
         
         // Thanks to http://blog.pcitron.fr/2010/12/14/play-an-animated-gif-with-an-ikimageview/
         // for example code on how to do this
-        NSArray * reps = [displayImage representations];
+        NSArray * reps = [tacocatImage representations];
         for (NSImageRep * rep in reps)
         {
             // find the bitmap representation
@@ -81,7 +79,7 @@
     [self drawGround];
     
     
-    //Figure out where to draw nyancat
+    //Figure out where to draw tacocat
     CGImageRef imageRef = (CGImageRef) gifFrames[gifFrameNumber];
     
     NSImage* currentFrame = [[NSImage alloc] initWithCGImage:imageRef size:NSZeroSize];
@@ -101,13 +99,12 @@
     destRect.origin = imageOrigin;
     destRect.size = imageSize;
     
-    // Use NyanCat position to figure out where to draw rainbow
+    // Use tacocat position to figure out where to draw rainbow
     int lastNyanRainbowEndX = destRect.origin.x + 6;
     int shiftY = 5;
     BOOL shift = NO;
     if(shiftRainbow == 2 || shiftRainbow == 3) {
         shift = YES;
-        
     }
     
     int nyanRainbowX = lastNyanRainbowEndX;
@@ -117,9 +114,9 @@
     // draw rainbow
     while(nyanRainbowX + 46 > 0 ) {
         if(shift) {
-            [self drawNyanRainbowSection:NSMakePoint(nyanRainbowX, nyanRainBowY + shiftY)];
+            [self drawTacocatRainbowSection:NSMakePoint(nyanRainbowX, nyanRainBowY + shiftY)];
         } else {
-            [self drawNyanRainbowSection:NSMakePoint(nyanRainbowX, nyanRainBowY)];
+            [self drawTacocatRainbowSection:NSMakePoint(nyanRainbowX, nyanRainBowY)];
         }
         shift = !shift;
         nyanRainbowX -= 46;
@@ -152,9 +149,8 @@
     
     NSSize viewSize  = [self bounds].size;
     
-    NSColor *lineColor= [NSColor colorWithDeviceRed: 0.0f green: 0.0f blue: 0.0f alpha: 1.0f];
     
-    [lineColor set];
+    [[NSColor blackColor] set];
     NSRectFill(NSMakeRect(0.0f, viewSize.height/5.0f, viewSize.width, 10.0f));
     
     // Ground color
@@ -170,7 +166,7 @@
 }
 
 
-- (void) drawNyanRainbowSection: (NSPoint)origin {
+- (void) drawTacocatRainbowSection: (NSPoint)origin {
     int rainbowSectionLength = 46;
     int rainbowSectionHeight = 30;
     
